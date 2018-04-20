@@ -1,21 +1,44 @@
-import React, {Component} from 'react';
+import React, {Component, PureComponent} from 'react';
 
-class Article extends Component {
-	state = {
-		isOpen: false
+class Article extends PureComponent {
+	constructor(props){
+		super(props)
+
+		this.state = {
+			count: 0
+		}
+	}
+
+	// shouldComponentUpdate(nextProps, nextState) {
+	// 	return this.state.isOpen !== nextState.isOpen
+	// }
+
+	componentWillMount() {
+		console.log('---', 'mounting')
+	}
+
+	// componentWillReceiveProps(nextProps) {
+	// 	if(nextProps.defaultOpen !== this.props.defaultOpen) this.setState({
+	// 		isOpen: nextProps.defaultOpen
+	// 	})
+	// }
+
+	componentWillUpdate() {
+		console.log('---', 'will update');
 	}
 
 	render() {
-		const {article} = this.props;
-		const body = this.state.isOpen && <section className="card-text">{article.text}</section>;
-		const style = {width: '50%'};
+		const {article, isOpen, onButtonClick} = this.props;
+		const body = isOpen && <section className="card-text">{article.text}</section>;
+		const style = {width: '90%'};
 		return (
 			<div className="card mx-auto" style={style}>
 				<div className="card-header">
-					<h2>
+					<h2 onClick = {this.incrementCounter}>
 						{article.title}
-						<button onClick={this.handleClick} className="btn btn-primary btn-lg float-right">
-							{this.state.isOpen ? 'close' : 'open'}
+						clicked {this.state.count}
+						<button onClick={onButtonClick} className="btn btn-primary btn-lg float-right">
+							{isOpen ? 'close' : 'open'}
 						</button>
 					</h2>
 				</div>
@@ -29,10 +52,9 @@ class Article extends Component {
 		)
 	}
 
-	handleClick = () => {
-		console.log('------', 'clicked');
+	incrementCounter = () => {
 		this.setState({
-			isOpen: !this.state.isOpen
+			count: this.state.count + 1
 		})
 	}
 }
